@@ -137,6 +137,52 @@ class StockAnalysis:
         plt.legend()
         plt.show()
 
+
+    def calculate_pynance_metrics(self):
+        """
+        Calculate additional financial metrics using PyNance.
+        """
+        from pynance import indicators
+
+        # Calculate volatility (standard deviation of returns)
+        volatility = indicators.volatility(self.df['close'])
+        self.df['volatility'] = volatility
+
+        # Calculate momentum (rate of change)
+        momentum = indicators.momentum(self.df['close'], window=10)
+        self.df['momentum'] = momentum
+
+        print(f"PyNance metrics (volatility, momentum) added for {self.ticker}.")
+
+    def plot_volatility(self):
+        """
+        Plot the volatility metric over time.
+        """
+        if 'volatility' in self.df.columns:
+            plt.figure(figsize=(12,4))
+            plt.plot(self.df['date'], self.df['volatility'], color='teal')
+            plt.title(f'{self.ticker} Volatility Over Time')
+            plt.xlabel('Date')
+            plt.ylabel('Volatility')
+            plt.show()
+        else:
+            print("Volatility data not found. Please run calculate_pynance_metrics() first.")
+
+    def plot_momentum(self):
+        """
+        Plot the momentum metric over time.
+        """
+        if 'momentum' in self.df.columns:
+            plt.figure(figsize=(12,4))
+            plt.plot(self.df['date'], self.df['momentum'], color='orange')
+            plt.title(f'{self.ticker} Momentum Over Time')
+            plt.xlabel('Date')
+            plt.ylabel('Momentum')
+            plt.show()
+        else:
+            print("Momentum data not found. Please run calculate_pynance_metrics() first.")
+
+
     def plot_dividends(self):
         """
         Plot dividend payouts over time if available.
